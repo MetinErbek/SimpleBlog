@@ -50,6 +50,11 @@
                     {{ __('Register') }}
                 </button>
             </div>
+            <br>
+					
+					<div class="text-center" style="font-size:15px;font-weight:bold">
+						<p><b><a href="{{ url('login') }}">{{ __('Login') }}</a>.</b></p>
+					</div>
         </form>
     </div>
 

@@ -16,6 +16,7 @@ use App\Http\Controllers\UsersController;
 */
 
 Route::get('/', [SiteController::class, 'index']);
+Route::get('/post/{safe_url}', [SiteController::class, 'post']);
 
 Auth::routes();
 
@@ -24,6 +25,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/', [PostsController::class, 'index']);
     Route::get('/index', [PostsController::class, 'index']);
     Route::get('/users', [UsersController::class, 'index']);
+    Route::get('/poststatuschange/{post_id}/{new_status}', [PostsController::class, 'postStatusChange']);
+    Route::post('/bulkremovepost', [PostsController::class, 'bulkRemovePost']);
     Route::resource('posts', PostsController::class);
     /*
     Route::get('/posts', [PostsController::class, 'create'])->name('posts.create');
@@ -31,4 +34,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::delete('/posts', [PostsController::class, 'destroy'])->name('posts.destroy');
     */
     Route::post('/users', [UsersController::class, 'destroy'])->name('users.destroy');
+});
+Route::get('/logout', function(){
+    auth()->logout();
+    Session()->flush();
+    return Redirect::to('/');
 });

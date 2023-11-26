@@ -26,30 +26,20 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto py-4 py-lg-0">
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url('/') }}">Home</a></li>
+                        @if(!Auth::user())
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url('login') }}">Login</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url('register') }}">Register</a></li>
+                        @else
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url('admin/index') }}">Panel</a></li>
 
+                        @endif
 					</ul>
                 </div>
             </div>
         </nav>
-        <!-- Page Header-->
-        <header class="masthead" style="background-image: url('{{ asset('assets/img/home-bg.jpg') }}')">
-            <div class="container position-relative px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
-                        <div class="site-heading">
-                            <h1>Blog</h1>
-                            <span class="subheading">All Blog Articles</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <!-- Main Content-->
-        <div class="container px-4 px-lg-5">
-			@yield('content', '')
-		</div>
+
+        @yield('content', '')
+		
         <!-- Footer-->
         <footer class="border-top">
             <div class="container px-4 px-lg-5">

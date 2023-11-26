@@ -33,7 +33,7 @@
                 </tr>
               </thead>
               <tbody> @foreach($Users as $user) <tr>
-                  <td>{{ $user->name }}</td>
+                  <td>{{ $user->name }}<br><small>{{ $user->email }}</small></td>
                   <td class="text-right">
                     <form method="POST" action="{{ route('users.destroy', ($user->id)) }}" style="display: inline;">
                       {{ csrf_field() }}

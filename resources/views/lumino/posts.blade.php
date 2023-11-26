@@ -64,6 +64,14 @@
 										</span>
 									</td>
 									<td class="text-right">
+										@if(Auth::user()->role_id == 1)
+											@if($post->status == 'publish')
+												<a class="btn btn-warning btn-sm btn-rounded"  href="{{ url('admin/poststatuschange/'.encrypt_sha_for_url($post->id).'/draft') }}">{{  __('UnPublish') }}</a>
+											@else
+												<a class="btn btn-success btn-sm btn-rounded"  href="{{ url('admin/poststatuschange/'.encrypt_sha_for_url($post->id).'/publish') }}">{{  __('Publish') }}</a>
+
+											@endif
+										@endif
 										<a class="btn btn-primary btn-sm btn-rounded"  href="{{ route('posts.edit', encrypt_sha_for_url($post->id) ) }}"><i class="fa fa-edit"></i>{{  __('Edit') }}</a>
 
 										<form method="POST" action="{{ route('posts.destroy', encrypt_sha_for_url($post->id)) }}" style="display: inline;">
@@ -104,14 +112,14 @@
 
 var checkeds = [];
 
-function bulkPublisherRemove()
+function bulkPostRemove()
 {
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
-	$.post(site+'/adminservice/bulkremovepublisher', { checkeds: checkeds }, function(data) {
+	$.post(site+'/admin/bulkremovepost', { checkeds: checkeds }, function(data) {
 		let $data = eval('('+data+')');
 		if($data['status'])
 		{
@@ -127,7 +135,7 @@ function bulkPublisherRemove()
 		$('#selected_action_btn').on('click', function(){
 			if($('#selected_saction').val() === 'remove')
 			{
-				bulkPublisherRemove()
+				bulkPostRemove()
 			} 
 		});
 

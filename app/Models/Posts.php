@@ -16,6 +16,7 @@ class Posts extends Model
         'user_id',
         'title',
         'slug',
+        'status',
         'details'
     ];
 

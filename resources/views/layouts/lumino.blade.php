@@ -2,7 +2,22 @@
 <html>
 <head>
 <title>Dashboard</title>
+<meta name="csrf-token" content="{{ csrf_token() }}" />
 @include('layouts.inc.lumino.head')
+<style type="text/css">
+.checkeds_form
+{
+	display:flex;
+	justify-content:space-between;
+	width:30%;
+}
+@media only screen and (max-device-width: 480px) {
+	.checkeds_form
+	{
+		width:50%;
+	}
+}
+</style>
 @yield('extracss', '');
 
 </head>

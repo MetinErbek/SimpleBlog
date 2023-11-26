@@ -143,7 +143,7 @@ if(!function_exists('postStatus'))
   {
       $Statuses = [
         ['value'=>'draft', 'name' => __('Draft'), 'class'=> 'warning', 'color'=> 'orange'],
-        ['value'=> 'published', 'name' => __('Published'), 'class'=> 'success', 'color'=> 'green'],
+        ['value'=> 'publish', 'name' => __('Published'), 'class'=> 'success', 'color'=> 'green'],
       
     ];
 

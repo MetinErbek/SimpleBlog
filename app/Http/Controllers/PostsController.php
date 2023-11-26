@@ -133,4 +133,53 @@ class PostsController extends Controller
               return redirect()->back()->withErrors([__('Has a Problem !')]);
           }
     }
+    public function postStatusChange(string $post_id, string $new_status)
+    {
+        try{
+
+            $id = decrypt_sha_for_url($post_id);
+            $PostRS = Posts::getWithConditions()->where('id', $id);
+            if($PostRS->exists())
+            {
+              $Post = $PostRS->first();
+  
+             if(in_array($new_status, ['publish','draft']))
+             {
+                $Post->update(['status'=> $new_status]);
+                return redirect()->back()->withErrors([__('Post Status Changed !')]);
+             } else {
+                return redirect()->back()->withErrors([__('Has a Problem !')]);
+             }
+  
+            }
+          }catch(\Illuminate\Database\QueryException $e)
+          {
+              return redirect()->back()->withErrors([__('Has a Problem !')]);
+          }
+    }
+
+
+    public function bulkRemovePost(Request $request)
+    {
+        try {
+            $total = 0;
+            $Selecteds = $request->checkeds;
+            foreach($Selecteds as $selected)
+            {
+                $id = decrypt_sha_for_url($selected);
+                $PostRS = Posts::getWithConditions()->where('id', $id);
+                if($PostRS->exists())
+                {
+                    $Post = $PostRS->first();
+                    $Post->delete();
+                    $total++;
+                }
+            }
+            return json_encode(['status'=>TRUE, 'result'=>['Select'=>$Selecteds,'message'=> $total.' blog article removed !' ]]);
+        } catch(Exception $e)
+        {
+            return json_encode(['status'=>FALSE, 'result'=>['message'=>$e->getMessage() ]]);
+        }
+    }
+
 }
