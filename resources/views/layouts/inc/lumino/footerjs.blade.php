@@ -10,7 +10,7 @@
 <script src="{{ asset('lumino/js/custom.js?v='.uniqid()) }}"></script>
 <script src="{{ asset('lumino/vendors/summernote/summernote.js') }}"></script>
 <script type="text/javascript">
-let $role = "{{ $role }}";
+
 let site = "{{ url('/') }}";
 $(document).ready(function(){
   $('.summernote_editor').summernote();
