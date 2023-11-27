@@ -28,6 +28,10 @@ class Posts extends Model
     {
         if(isset($param)){extract($param);}
         $conditions = [];
+        if(isset($user_filter) && !empty($user_filter))
+        {
+            $conditions[] = ['user_id', '=', $user_filter];
+        }
         if(isset($search_filter) && !empty($search_filter))
         {
           

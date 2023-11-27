@@ -14,7 +14,12 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $this->data['Posts'] = Posts::getWithConditions(request()->all())->paginate(15);
+        $filters = request()->all();
+        if(Auth::user()->role_id != 1)
+        {
+            $filters['user_filter'] = Auth::user()->id;
+        }
+        $this->data['Posts'] = Posts::getWithConditions($filters)->paginate(15);
 
         return view('lumino.posts', $this->data);
     }

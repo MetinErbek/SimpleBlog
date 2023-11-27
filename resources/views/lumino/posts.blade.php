@@ -73,13 +73,14 @@
 											@endif
 										@endif
 										<a class="btn btn-primary btn-sm btn-rounded"  href="{{ route('posts.edit', encrypt_sha_for_url($post->id) ) }}"><i class="fa fa-edit"></i>{{  __('Edit') }}</a>
-
+										
+										@if(Auth::user()->role_id == 1)
 										<form method="POST" action="{{ route('posts.destroy', encrypt_sha_for_url($post->id)) }}" style="display: inline;">
 											{{ csrf_field() }}
 											{{ method_field('delete') }}
 											<button type="submit" class="btn btn-danger btn-sm btn-rounded verified_submit" ><i class="fa fa-times"></i> <?php echo __('Remove');?></button>
 										</form>
-										
+										@endif
 									</td>
 								</tr>
 								@endforeach
