@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\PostVotes;
 
 class Posts extends Model
 {
@@ -23,6 +24,10 @@ class Posts extends Model
     public function user()
     {
         return $this->belongsTo(User::class);;
+    }
+    public function votes()
+    {
+        return $this->hasMany(PostVotes::class);;
     }
     public function scopegetWithConditions($query, $param = NULL)
     {

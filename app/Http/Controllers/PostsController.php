@@ -19,9 +19,23 @@ class PostsController extends Controller
         {
             $filters['user_filter'] = Auth::user()->id;
         }
-        $this->data['Posts'] = Posts::getWithConditions($filters)->paginate(15);
 
-        return view('lumino.posts', $this->data);
+        $this->data['Posts'] = Posts::getWithConditions($filters)->paginate(15);
+        if(request()->is('api/*'))
+        {   
+            $ALLPosts = [];
+
+            foreach($this->data['Posts'] as $k => $post)
+            {
+                $post = $post->toArray();
+
+                $post['id'] = encrypt_sha_for_url($post['id']);
+                $ALLPosts[] = $post;
+            }
+            return jsonResponse(TRUE, '', ['Posts'=> $ALLPosts]);
+        } else {
+            return view('lumino.posts', $this->data);
+        }
     }
 
     /**
@@ -37,6 +51,7 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
+        
         $reqs = $request->toArray();
         try{
 
@@ -45,13 +60,21 @@ class PostsController extends Controller
             $Article = new Posts($reqs);
             $Article->save();
             $Article->update(['slug'=>Str::slug($Article->title.'-'.$Article->id)]);
-
-            return redirect(url('admin/index'))->withErrors([__('Your Blog Article Saved !')]);
+            if(request()->is('api/*'))
+            {
+               return jsonResponse(TRUE, __('Your Blog Article Saved !'));
+            } else {
+                return redirect(url('admin/index'))->withErrors([__('Your Blog Article Saved !')]);
+            }
 
         } catch(\Illuminate\Database\QueryException $e)
         {
-            
-            return redirect()->back()->withErrors([$e->getMessage()]);
+            if(request()->is('api/*'))
+            {
+                return jsonResponse(FALSE, $e->getMessage());
+            } else {
+                return redirect()->back()->withErrors([$e->getMessage()]);
+            }
   
         }
     }
@@ -104,15 +127,23 @@ class PostsController extends Controller
                $Post->fill($reqs);
                $Post->save();
                $Post->update(['slug'=> Str::slug($request->title.'-'.$Post->id)]);
-  
-               return redirect(url('admin/posts'))->withErrors([__('Blog Updated !')]);
-  
+               if(request()->is('api/*'))
+               {
+                    return jsonResponse(TRUE, __('Your Blog Article Updated !'));
+               } else {
+                    return redirect(url('admin/posts'))->withErrors([__('Blog Updated !')]);
+               }
   
             }
           }catch(\Illuminate\Database\QueryException $e)
           {
-              return redirect()->back()->withErrors([__('Has a Problem !'.$e->getMessage())]);
-          }
+                if(request()->is('api/*'))
+                {
+                    return jsonResponse(FALSE, $e->getMessage());
+                } else {
+                    return redirect()->back()->withErrors([$e->getMessage()]);
+                }          
+            }
     }
 
     /**
@@ -126,16 +157,24 @@ class PostsController extends Controller
             $PostRS = Posts::getWithConditions()->where('id', $id);
             if($PostRS->exists())
             {
-              $Post = $PostRS->first();
-  
-              $Del = $Post->delete();
-  
-              return redirect()->back()->withErrors([__('Blog Article Removed !')]);
-  
+            $Post = $PostRS->first();
+
+            $Del = $Post->delete();
+            if(request()->is('api/*'))
+            {
+                return jsonResponse(TRUE, __('Blog Article Removed !'));    
+            } else {
+                return redirect()->back()->withErrors([__('Blog Article Removed !')]);
+            }
             }
           }catch(\Illuminate\Database\QueryException $e)
           {
-              return redirect()->back()->withErrors([__('Has a Problem !')]);
+            if(request()->is('api/*'))
+            {
+                return jsonResponse(FALSE, $e->getMessage());
+            } else {
+                return redirect()->back()->withErrors([$e->getMessage()]);
+            }     
           }
     }
     public function postStatusChange(string $post_id, string $new_status)
@@ -151,15 +190,30 @@ class PostsController extends Controller
              if(in_array($new_status, ['publish','draft']))
              {
                 $Post->update(['status'=> $new_status]);
-                return redirect()->back()->withErrors([__('Post Status Changed !')]);
+                if(request()->is('api/*'))
+                {
+                    return jsonResponse(TRUE, __('Post Status Changed !'));   
+                } else {
+                    return redirect()->back()->withErrors([__('Post Status Changed !')]);
+                }
              } else {
-                return redirect()->back()->withErrors([__('Has a Problem !')]);
+                if(request()->is('api/*'))
+                {
+                    return jsonResponse(FALSE, __('Has a Problem !'));        
+                } else {
+                    return redirect()->back()->withErrors([__('Has a Problem !')]);
+                }
              }
   
             }
           }catch(\Illuminate\Database\QueryException $e)
           {
-              return redirect()->back()->withErrors([__('Has a Problem !')]);
+            if(request()->is('api/*'))
+            {
+                return jsonResponse(FALSE, $e->getMessage());
+            } else {
+                return redirect()->back()->withErrors([$e->getMessage()]);
+            }    
           }
     }
 
