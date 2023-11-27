@@ -11,7 +11,7 @@
 <div class="col-md-12">
    <div class="panel panel-default">
       <form action="{{ route('posts.update', encrypt_sha_for_url($Post->id)) }}" method="POST">
-         {{ method_field('PATCH') }}
+         {{ method_field('PUT') }}
          @csrf
          <div class="panel-body">
             <div class="form-group ">
